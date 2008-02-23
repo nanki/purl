@@ -63,16 +63,18 @@ module Purl
 
     def blur(image, r)
       r = [r, 10].min
+      d = r.quo(2.75)
       process(image, :as => :magick) do |img|
-        img = img.blur_image(0, r) unless r.zero?
+        img = img.blur_image(0, d) unless r.zero?
         Result.new(img)
       end
     end
 
     def shadow(image, r)
       r = [r, 10].min
+      d = r.quo(2.75)
       process(image, :as => :magick) do |img|
-        shadow = magick2cairo(img.blur_channel(0, r, Magick::AlphaChannel))
+        shadow = magick2cairo(img.blur_channel(0, d, Magick::AlphaChannel))
 
         img = cairo(img.columns, img.rows) do |c|
           c.identity_matrix
