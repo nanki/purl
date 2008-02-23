@@ -8,6 +8,7 @@ module Purl
         Op.new(:shadow, 2),
         Op.new(:composite, 2),
         Op.new(:rotate, 2),
+        Op.new(:translate, 3),
         Op.new(:resize, 3)]
     end
 
@@ -19,7 +20,18 @@ module Purl
 
     def rotate(image, angle)
       process(image, :as => :magick) do |img|
+        img.background_color = 'transparent'
         img.rotate!(angle)
+        Result.new(img)
+      end
+    end
+
+    def translate(image, x, y)
+      process(image, :as => :cairo) do |img|
+        img = cairo(img.width + y, img.height + x) do |ctx|
+          ctx.set_source(img, x, y)
+          ctx.paint
+        end
         Result.new(img)
       end
     end
