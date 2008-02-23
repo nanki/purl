@@ -9,6 +9,7 @@ module Purl
         Op.new(:composite, 2),
         Op.new(:rotate, 2),
         Op.new(:translate, 3),
+        Op.new(:opacify, 2),
         Op.new(:resize, 3)]
     end
 
@@ -22,6 +23,16 @@ module Purl
       process(image, :as => :magick) do |img|
         img.background_color = 'transparent'
         img.rotate!(angle)
+        Result.new(img)
+      end
+    end
+
+    def opacify(image, opacify)
+      process(image, :as => :cairo) do |img|
+        img = cairo(img.width, img.height) do |ctx|
+          ctx.set_source(img, 0, 0)
+          ctx.paint opacify
+        end
         Result.new(img)
       end
     end
@@ -53,7 +64,7 @@ module Purl
     def blur(image, r)
       r = [r, 10].min
       process(image, :as => :magick) do |img|
-        img = img.blur_image(r, 5.0)
+        img = img.blur_image(0, r) unless r.zero?
         Result.new(img)
       end
     end
@@ -61,7 +72,7 @@ module Purl
     def shadow(image, r)
       r = [r, 10].min
       process(image, :as => :magick) do |img|
-        shadow = magick2cairo(img.blur_channel(r, 5.0, Magick::AlphaChannel))
+        shadow = magick2cairo(img.blur_channel(0, r, Magick::AlphaChannel))
 
         img = cairo(img.columns, img.rows) do |c|
           c.identity_matrix
