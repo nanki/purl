@@ -39,7 +39,7 @@ module Purl
 
     def translate(image, x, y)
       process(image, :as => :cairo) do |img|
-        img = cairo(img.width + y, img.height + x) do |ctx|
+        img = cairo(img.width + x, img.height + y) do |ctx|
           ctx.set_source(img, x, y)
           ctx.paint
         end
