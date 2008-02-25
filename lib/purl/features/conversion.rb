@@ -17,7 +17,7 @@ module Purl
     def to_jpeg(image)
       process(image, :as => :magick) do |img|
         img.format = 'jpeg'
-        Result.new(img.to_blob, 'image/jpeg')
+        Result.new(img.to_blob{self.quality = 80}, 'image/jpeg')
       end
     end
   end

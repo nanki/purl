@@ -6,7 +6,7 @@ class Cairo::Surface
   def to_blob
     io = StringIO.new
     self.write_to_png(io)
-    self.finish
+    #self.finish
     io.string
   end
 
