@@ -1,6 +1,6 @@
 module Purl
   module Features::Conversion
-    include CairoUtil
+    include ::Purl
     def self.operators
       [ Op.new(:'to.png' , 1, :to_png),
         Op.new(:'to.jpg' , 1, :to_jpeg),

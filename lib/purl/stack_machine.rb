@@ -38,6 +38,7 @@ module Purl
   end
 
   class StackMachine
+    attr_reader :stack
     def parse(sequence_string)
       sequence_string.scan(/\([^)]*\)|[^:]+/).map{|v| Float(v) rescue (/^\((.*)\)$/ === v ? $1 : v.intern)}
     end
