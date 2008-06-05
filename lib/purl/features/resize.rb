@@ -1,7 +1,9 @@
 module Purl
-  module Features::ResizeMacro
+  module Features::Resize
     def self.operators
       [ 
+        Op.new(:resize, 3),
+        Op.new('resize.upto', 3, :resize_upto),
         Macro.new(:large , [250, 190, :resize]),
         Macro.new(:medium, [180, 135, :resize]),
         Macro.new(:small , [150, 115, :resize]),
@@ -18,5 +20,23 @@ module Purl
         Macro.new( 'thumb.height', [ 90, :'resize.height']),
       ]
     end
+
+    def resize(image, w, h)
+      process(image, :as => :magick) do |img|
+        img.crop_resized!(w, h, Magick::CenterGravity)
+        Result.new(img)
+      end
+    end
+
+    def resize_upto(image, w, h)
+      process(image, :as => :magick) do |img|
+        img.change_geometry!("#{w}x#{h}") do |cols, rows, img|
+          img.resize!(cols, rows)
+        end
+
+        Result.new(img)
+      end
+    end
+
   end
 end
