@@ -10,7 +10,8 @@ module Purl
         Op.new(:rotate, 2),
         Op.new(:translate, 3),
         Op.new(:opacify, 2),
-        Op.new(:resize, 3)]
+        Op.new(:resize, 3),
+        Op.new('resize.upto', 3, :resize_upto)]
     end
 
     def geom(image)
@@ -57,6 +58,16 @@ module Purl
     def resize(image, w, h)
       process(image, :as => :magick) do |img|
         img.crop_resized!(w, h, Magick::CenterGravity)
+        Result.new(img)
+      end
+    end
+
+    def resize_upto(image, w, h)
+      process(image, :as => :magick) do |img|
+        img.change_geometry!("#{w}x#{h}") do |cols, rows, img|
+          img.resize!(cols, rows)
+        end
+
         Result.new(img)
       end
     end

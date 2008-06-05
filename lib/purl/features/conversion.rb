@@ -2,9 +2,9 @@ module Purl
   module Features::Conversion
     include ::Purl
     def self.operators
-      [ Op.new(:'to.png' , 1, :to_png),
-        Op.new(:'to.jpg' , 1, :to_jpeg),
-        Op.new(:'to.jpeg', 1, :to_jpeg)]
+      [ Op.new('to.png' , 1, :to_png),
+        Op.new('to.jpg' , 1, :to_jpeg),
+        Op.new('to.jpeg', 1, :to_jpeg)]
     end
 
     def to_png(image)

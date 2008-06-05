@@ -8,7 +8,7 @@ module Purl
   class OperatorBase
     attr_reader :name, :operands
     def initialize(name, operands)
-      @name = name
+      @name = name.to_sym
       @operands = operands
     end
 
@@ -18,7 +18,7 @@ module Purl
   class Op < OperatorBase
     def initialize(name, operands, method_name = name)
       super(name, operands)
-      @method_name = method_name
+      @method_name = method_name.to_sym
     end
 
     def dispatch(env, args)
