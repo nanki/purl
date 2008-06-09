@@ -1,6 +1,6 @@
 # Purl
-require 'cairo'
 require 'RMagick'
+require 'cairo_util'
 require 'purl/stack_machine'
 
 module Purl
@@ -13,6 +13,7 @@ module Purl
       load_feature Features::Conversion
       load_feature Features::Stack
       load_feature Features::Image
+      load_feature Features::Resize
       yield self
     end
 

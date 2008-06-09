@@ -1,6 +1,7 @@
 module Purl
   module Features::Image
     include ::Purl
+    include ::CairoUtil
     def self.operators
       [ Op.new(:geom, 1),
         Op.new(:crop, 5),
