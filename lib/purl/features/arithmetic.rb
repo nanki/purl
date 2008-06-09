@@ -21,7 +21,7 @@ module Purl
     end
 
     def div(op1, op2)
-      Result.new(op1.quo(op2))
+      Result.new(op1.quo(op2).to_f)
     end
 
     def mod(op1, op2)

@@ -2,6 +2,7 @@ module Purl
   module Features::Stack
     def self.operators
       [ Op.new(:swap, 2),
+        Op.new(:pop,  1),
         Op.new(:dump,-1),
         Op.new(:pull,-1),
         Op.new(:get, -1),
@@ -10,6 +11,10 @@ module Purl
 
     def swap(op1, op2)
       Result.new(op2, op1)
+    end
+
+    def pop(ignore)
+      Result.new
     end
 
     def dump(*stack)
@@ -35,7 +40,7 @@ module Purl
 
     def dup(*stack)
       v = stack.last
-      d = v
+      d = v.dup rescue v
       stack.push d
       Result.new(*stack)
     end
