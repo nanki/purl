@@ -38,11 +38,8 @@ module Purl
     end
 
     def translate(image, x, y)
-      process(image, :as => :cairo) do |img|
-        img = cairo(img.width + x, img.height + y) do |ctx|
-          ctx.set_source(img, x, y)
-          ctx.paint
-        end
+      process(image, :as => :magick) do |img|
+        img = img.extent(img.columns + x, img.rows + y, -x, -y)
         Result.new(img)
       end
     end

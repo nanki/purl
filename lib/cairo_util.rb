@@ -10,6 +10,10 @@ class Cairo::Surface
     io.string
   end
 
+  def dup
+    self.class.from_blob(self.to_blob)
+  end
+
   def self.from_blob(png_blob)
     from_png(StringIO.new(png_blob))
   end
