@@ -32,6 +32,8 @@ module CairoUtil
   end
 
   def cairo2magick(image)
-    Magick::Image.from_blob(image.to_blob).shift
+    img = Magick::Image.from_blob(image.to_blob).shift
+    img.background_color = 'transparent'
+    img
   end
 end

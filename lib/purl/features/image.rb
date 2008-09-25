@@ -9,7 +9,7 @@ module Purl
         Op.new(:shadow, 2),
         Op.new(:composite, 2),
         Op.new(:rotate, 2),
-        Op.new(:translate, 3),
+        Op.new(:extend, 5, :_extend),
         Op.new(:opacify, 2)]
     end
 
@@ -37,9 +37,9 @@ module Purl
       end
     end
 
-    def translate(image, x, y)
+    def _extend(image, x1, y1, x2, y2)
       process(image, :as => :magick) do |img|
-        img = img.extent(img.columns + x, img.rows + y, -x, -y)
+        img = img.extent(img.columns + x1 + x2, img.rows + y1 + y2, -x1, -y1)
         Result.new(img)
       end
     end
