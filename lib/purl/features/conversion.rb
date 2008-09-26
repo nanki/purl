@@ -5,6 +5,7 @@ module Purl
       [ Op.new('to.png' , 1, :to_png),
         Op.new('to.jpg' , 1, :to_jpeg),
         Op.new('to.jpeg', 1, :to_jpeg),
+        Op.new('to.gif' , 1, :to_gif),
         Op.new('to.json',-1, :to_json)]
     end
 
@@ -19,6 +20,13 @@ module Purl
       process(image, :as => :magick) do |img|
         img.format = 'jpeg'
         Result.new(img.to_blob{self.quality = 80}, 'image/jpeg')
+      end
+    end
+
+    def to_gif(image)
+      process(image, :as => :magick) do |img|
+        img.format = 'gif'
+        Result.new(img.to_blob, 'image/gif')
       end
     end
 
