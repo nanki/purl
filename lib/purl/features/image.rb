@@ -10,6 +10,8 @@ module Purl
         Op.new(:composite, 2),
         Op.new(:rotate, 2),
         Op.new(:extend, 5, :_extend),
+        Op.new('flip.x', 1, :flip_x),
+        Op.new('flip.y', 1, :flip_y),
         Op.new(:opacify, 2)]
     end
 
@@ -41,6 +43,18 @@ module Purl
       process(image, :as => :magick) do |img|
         img = img.extent(img.columns + x1 + x2, img.rows + y1 + y2, -x1, -y1)
         Result.new(img)
+      end
+    end
+
+    def flip_x(image)
+      process(image, :as => :magick) do |img|
+        Result.new(image.flop!)
+      end
+    end
+
+    def flip_y(image)
+      process(image, :as => :magick) do |img|
+        Result.new(image.flip!)
       end
     end
 
