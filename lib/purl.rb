@@ -19,7 +19,7 @@ module Purl
 
     def load(image_id)
       image = @options[:image_class].find(image_id)
-      image = Magick::Image.from_blob(image.send(@options[:image_data])).shift
+      image = Magick::Image.from_blob(image.send(@options[:image_data])).shift.strip!
       Result.new(image)
     end
   end
