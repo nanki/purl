@@ -41,7 +41,7 @@ module Purl
   class StackMachine
     attr_reader :stack
     def parse(sequence_string)
-      sequence_string.split(":").map{|v| Float(v) rescue (/^\((.*)\)$/ === v ? $1 : v.intern)}
+      sequence_string.split(":").reject(&:blank?).map{|v| Float(v) rescue (/^\((.*)\)$/ === v ? $1 : v.intern)}
     end
 
     def initialize(sequence_string, environment)
