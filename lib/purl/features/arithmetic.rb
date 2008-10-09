@@ -8,11 +8,11 @@ module Purl
           Op.new(:mul, 2),
           Op.new(:div, 2),
           Op.new(:mod, 2),
-          Op.new(:'add.2', 3, :add_2),
-          Op.new(:'sub.2', 3, :sub_2),
-          Op.new(:'mul.2', 3, :mul_2),
-          Op.new(:'div.2', 3, :div_2),
-          Op.new(:'mod.2', 3, :mod_2),
+          Op.new('add.2', 3, :add_2),
+          Op.new('sub.2', 3, :sub_2),
+          Op.new('mul.2', 3, :mul_2),
+          Op.new('div.2', 3, :div_2),
+          Op.new('mod.2', 3, :mod_2),
         ]
       end
 
