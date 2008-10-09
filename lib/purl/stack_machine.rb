@@ -93,9 +93,13 @@ module Purl
       @operators[operator.name] = operator
     end
 
-    def load_feature(mod)
+    def load_feature(mod, options = {})
       class << mod
         include ::Purl
+      end
+
+      if mod.respond_to?(:options=)
+        mod.options = options
       end
       
       mod.operators.each do |op|

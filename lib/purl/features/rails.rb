@@ -1,7 +1,7 @@
 module Purl
   module Features::Rails
     class << self
-      attr_accessor :image_class, :image_data
+      attr_accessor :image_class, :data_column
 
       def operators
         [
@@ -9,11 +9,14 @@ module Purl
         ]
       end
 
+      def options=(options)
+        @image_class = options[:image_class] || ::Image
+        @data_column = options[:data_column] || 'data'
+      end
+
       def load(image_id)
-        @image_class ||= ::Image
-        @image_data ||= 'data'
         image = @image_class.find(image_id)
-        image = Magick::Image.from_blob(image.send(@image_data)).shift.strip!
+        image = Magick::Image.from_blob(image.send(@data_column)).shift.strip!
         Result.new(image)
       end
     end
