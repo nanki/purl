@@ -36,13 +36,13 @@ module Purl
 
       def flip_x(image)
         process(image, :as => :magick) do |img|
-          Result.new(image.flop!)
+          Result.new(img.flop!)
         end
       end
 
       def flip_y(image)
         process(image, :as => :magick) do |img|
-          Result.new(image.flip!)
+          Result.new(img.flip!)
         end
       end
 
