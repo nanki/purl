@@ -9,7 +9,7 @@ module Purl
           Op.new(:pull,-1),
           Op.new(:get, -1),
           Op.new(:dup, -1),
-          Op.new('pull.n', -1, :pull_n),
+          Op.new(:slice, -1),
         ]
       end
 
@@ -42,7 +42,7 @@ module Purl
         Result.new(*stack)
       end
 
-      def pull_n(*stack)
+      def slice(*stack)
         n = stack.pop
         i = stack.pop + 1
         stack.concat stack.slice!(-i, n)
