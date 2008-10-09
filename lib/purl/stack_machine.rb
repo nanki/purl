@@ -12,7 +12,8 @@ module Purl
       @operands = operands
     end
 
-    def dispatch(env, args);end
+    attr_accessor :mod
+    def dispatch(args);end
   end
 
   class Op < OperatorBase
@@ -21,8 +22,8 @@ module Purl
       @method_name = method_name.to_sym
     end
 
-    def dispatch(env, args)
-      env.send(@method_name, *args)
+    def dispatch(args)
+      @mod.send(@method_name, *args)
     end
   end
 
@@ -32,7 +33,7 @@ module Purl
       @macro = macro
     end
 
-    def dispatch(env, args)
+    def dispatch(args)
       Result.new(*@macro)
     end
   end
@@ -85,7 +86,7 @@ module Purl
     end
 
     def dispatch(operator, args)
-      operator.dispatch(self, args)
+      operator.dispatch(args)
     end
 
     def add_operator(operator)
@@ -93,8 +94,12 @@ module Purl
     end
 
     def load_feature(mod)
-      extend mod
+      class << mod
+        include ::Purl
+      end
+      
       mod.operators.each do |op|
+        op.mod = mod
         self.add_operator op
       end
     end

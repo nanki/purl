@@ -1,4 +1,3 @@
-# Purl
 require 'RMagick'
 require 'cairo_util'
 require 'purl/stack_machine'
@@ -7,8 +6,7 @@ module Purl
   class Purl < Environment
     def initialize(options = {})
       super
-      @options = {:image_class => ::Image, :image_data => 'data'}.merge(options)
-      add_operator Op.new :load, 1
+      load_feature Features::Rails
       load_feature Features::Arithmetic
       load_feature Features::Conversion
       load_feature Features::Stack
@@ -18,13 +16,9 @@ module Purl
       load_feature Features::ResizeMacro
       yield self
     end
-
-    def load(image_id)
-      image = @options[:image_class].find(image_id)
-      image = Magick::Image.from_blob(image.send(@options[:image_data])).shift.strip!
-      Result.new(image)
-    end
   end
+
+  include ::CairoUtil
 
   private
   def process(image, options = {:as => :cairo})
