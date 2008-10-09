@@ -29,6 +29,7 @@ module Purl
 
       def _extend(image, x1, y1, x2, y2)
         process(image, :as => :magick) do |img|
+          img.background_color = 'transparent'
           img = img.extent(img.columns + x1 + x2, img.rows + y1 + y2, -x1, -y1)
           Result.new(img)
         end
