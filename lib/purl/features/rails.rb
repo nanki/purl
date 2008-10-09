@@ -1,13 +1,11 @@
 module Purl
   module Features::Rails
     class << self
-      attr_accessor :image_class, :data_column
-
       def operators
-        [
-          Op.new :load, 1
-        ]
+        [ Op.new(:load, 1) ]
       end
+
+      attr_reader :image_class, :data_column
 
       def options=(options)
         @image_class = options[:image_class] || ::Image
