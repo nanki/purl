@@ -1,6 +1,8 @@
 module Purl
   module Features::Image
     class << self
+      include ::Purl::Features::Limit
+
       def operators
         [
           Op.new(:geom, 1),
@@ -57,8 +59,10 @@ module Purl
       def composite(image1, image2)
         process(image1, :as => :magick) do |img1|
           process(image2, :as => :magick) do |img2|
-            w = [img1.columns, img2.columns].max
             h = [img1.rows, img2.rows].max
+            w = [img1.columns, img2.columns].max
+            w = [w, @max_width].min
+            h = [h, @max_height].min
             
             img1.background_color = 'transparent'
             Result.new(img1.extent(w, h).composite(img2, 0, 0, Magick::OverCompositeOp))

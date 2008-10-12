@@ -1,6 +1,8 @@
 module Purl
   module Features::Resize
     class << self
+      include ::Purl::Features::Limit
+
       def operators
         [ 
           Op.new(:resize, 3),
@@ -12,6 +14,8 @@ module Purl
       end
 
       def resize(image, w, h)
+        w = [w, @max_width].min
+        h = [h, @max_height].min
         process(image, :as => :magick) do |img|
           img.crop_resized!(w, h, Magick::CenterGravity)
           Result.new(img)
@@ -19,6 +23,8 @@ module Purl
       end
 
       def resize_fitto(image, w, h)
+        w = [w, @max_width].min
+        h = [h, @max_height].min
         process(image, :as => :magick) do |img|
           img.change_geometry!("#{w}x#{h}") do |cols, rows, img|
             img.resize!(cols, rows)
@@ -29,6 +35,8 @@ module Purl
       end
 
       def resize_upto(image, w, h)
+        w = [w, @max_width].min
+        h = [h, @max_height].min
         process(image, :as => :magick) do |img|
           unless img.columns < w && img.rows < h
             img.change_geometry!("#{w}x#{h}") do |cols, rows, img|
