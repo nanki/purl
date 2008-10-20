@@ -14,6 +14,7 @@ module Purl
       load_feature Features::Effect
       load_feature Features::Resize
       load_feature Features::ResizeMacro
+      load_feature Features::Cairo
       yield self
     end
   end

@@ -21,9 +21,12 @@ end
 
 module CairoUtil
   def cairo(width = 10, height = 10)
-    context = Cairo::Context.new(Cairo::ImageSurface.new(Cairo::FORMAT_ARGB32, width, height))
-    yield context
+    context = cairo_context(width, height)
     context.target
+  end
+
+  def cairo_context(width = 10, height = 10)
+    Cairo::Context.new(Cairo::ImageSurface.new(Cairo::FORMAT_ARGB32, width, height))
   end
 
   def magick2cairo(image)
