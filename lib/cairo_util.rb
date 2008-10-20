@@ -22,6 +22,7 @@ end
 module CairoUtil
   def cairo(width = 10, height = 10)
     context = cairo_context(width, height)
+    yield context
     context.target
   end
 
