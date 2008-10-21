@@ -47,7 +47,7 @@ module Purl
 
       def fill(ctx)
         if ctx.has_current_point?
-          ctx.fill_preserve
+          ctx.fill
         else
           ctx.paint
         end
@@ -66,18 +66,23 @@ module Purl
         Result.new(ctx)
       end
 
-      def arc_cw(ctx, x, y, radius, b, e)
-        ctx.arc x, y, radius, b, e
+      RAD2DEG = Math::PI/180
+      def arc_cw(ctx, x, y, radius, angle1, angle2)
+        angle1 *= RAD2DEG
+        angle2 *= RAD2DEG
+        ctx.arc x, y, radius, angle1, angle2
         Result.new(ctx)
       end
 
-      def arc_ccw(ctx, x, y, radius, b, e)
-        ctx.arc_negative x, y, radius, b, e
+      def arc_ccw(ctx, x, y, radius, angle1, angle2)
+        angle1 *= RAD2DEG
+        angle2 *= RAD2DEG
+        ctx.arc_negative x, y, radius, angle1, angle2
         Result.new(ctx)
       end
 
       def circle(ctx, x, y, radius)
-        arc_cw(ctx, x, y, radius, 0, 2 * Math::PI)
+        arc_cw(ctx, x, y, radius, 0, 360)
       end
     end
   end
