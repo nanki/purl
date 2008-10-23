@@ -8,6 +8,7 @@ module Purl
           Op.new(:ctx, 2),
           Op.new(:xtc, 1),
           Op.new(:rgb, 4),
+          Op.new(:rgba, 5),
           Op.new(:linewidth, 2),
           Op.new(:stroke, 1),
           Op.new(:fill, 1),
@@ -16,7 +17,7 @@ module Purl
           Op.new(:arc, 6, :arc_cw),
           Op.new(:'arc.cw', 6, :arc_cw),
           Op.new(:'arc.ccw', 6, :arc_ccw),
-          Op.new(:circle, 4),
+          Macro.new(:circle, [0, 360, :arc])
         ]
       end
 
@@ -32,6 +33,11 @@ module Purl
 
       def rgb(ctx, r, g, b)
         ctx.set_source_rgb r, g, b
+        Result.new(ctx)
+      end
+
+      def rgba(ctx, r, g, b, a)
+        ctx.set_source_rgba r, g, b, a
         Result.new(ctx)
       end
 
@@ -79,10 +85,6 @@ module Purl
         angle2 *= RAD2DEG
         ctx.arc_negative x, y, radius, angle1, angle2
         Result.new(ctx)
-      end
-
-      def circle(ctx, x, y, radius)
-        arc_cw(ctx, x, y, radius, 0, 360)
       end
     end
   end
