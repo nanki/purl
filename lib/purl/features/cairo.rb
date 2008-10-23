@@ -9,6 +9,7 @@ module Purl
           Op.new(:xtc, 1),
           Op.new(:rgb, 4),
           Op.new(:rgba, 5),
+          Op.new(:pattern, 2),
           Op.new(:linewidth, 2),
           Op.new(:stroke, 1),
           Op.new(:fill, 1),
@@ -38,6 +39,11 @@ module Purl
 
       def rgba(ctx, r, g, b, a)
         ctx.set_source_rgba r, g, b, a
+        Result.new(ctx)
+      end
+
+      def pattern(ctx, pattern)
+        ctx.set_source pattern
         Result.new(ctx)
       end
 
