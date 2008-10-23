@@ -1,4 +1,6 @@
 module Purl
+  class UnexpectedArgument < StandardError;end
+  
   class Result < Array
     def initialize(*args)
       super(args)
