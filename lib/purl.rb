@@ -10,6 +10,7 @@ module Purl
       load_feature Features::Arithmetic
       load_feature Features::Conversion
       load_feature Features::Stack
+      load_feature Features::Lambda
       load_feature Features::Image
       load_feature Features::Effect
       load_feature Features::Resize
