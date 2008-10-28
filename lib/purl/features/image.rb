@@ -15,9 +15,19 @@ module Purl
         ]
       end
 
-      def geom(image)
-        process(image, :as => :magick) do |img|
-          Result.new(image, img.columns, img.rows)
+      def geom(target)
+        case
+        when target.respond_to?(:columns) && target.respond_to?(:rows)
+          # Magick::Image
+          Result.new(target, target.columns, target.rows)
+        when target.respond_to?(:target)
+          # Cairo::Context
+          Result.new(target, target.target.width, target.target.height)
+        when target.respond_to?(:width) && target.respond_to?(:height)
+          # Cairo::Surface
+          Result.new(target, target.width, target.height)
+        else
+          raise UnexpectedArgument
         end
       end
 
