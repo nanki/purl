@@ -10,6 +10,8 @@ module Purl
           Op.new(:get, -1),
           Op.new(:dup, -1),
           Op.new(:slice, -1),
+          Op.new(:reverse, -1),
+          Op.new(:stripe, -1),
         ]
       end
 
@@ -46,6 +48,22 @@ module Purl
         n = stack.pop
         i = stack.pop + 1
         stack.concat stack.slice!(-i, n)
+        Result.new(*stack)
+      end
+
+      def reverse(*stack)
+        n = stack.pop
+        stack.concat stack.slice!(-n, n).reverse
+        Result.new(*stack)
+      end
+
+      def stripe(*stack)
+        n = stack.pop
+        m = stack.pop
+        mn = m * n
+        array = stack.slice!(- mn, mn)
+
+        stack.concat((0...m).map{array.slice!(0, n)}.transpose.flatten)
         Result.new(*stack)
       end
 
