@@ -64,9 +64,9 @@ module Purl
 
     def process(op)
       case 
-      when op == :'['
+      when op == :'('
         self.open_stack.push Macro.new
-      when op == :']'
+      when op == :')'
         raise "" unless Macro === self.open_stack
         self.open_stack.close
       when Macro === self.open_stack
