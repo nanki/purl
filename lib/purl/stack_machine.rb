@@ -1,5 +1,6 @@
 module Purl
   class UnexpectedArgument < StandardError;end
+  class UnknownOperator < StandardError;end
   
   class Result < Array
     def initialize(*args)
@@ -75,6 +76,7 @@ module Purl
         result = @env.dispatch(operator, fetch_operands(operator.operands))
         result.each{|op| process(op)} if Result === result
       else
+        raise UnknownOperator if Symbol === op
         @stack.push op
       end
     end
