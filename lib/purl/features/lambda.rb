@@ -9,6 +9,7 @@ module Purl
           Op.new(:times, 2),
           Op.new(:each, -1),
           Op.new(:'each.n', -1, 'each_n'),
+          Op.new(:'each.stripe', -1, 'each_stripe'),
         ]
       end
 
@@ -40,6 +41,21 @@ module Purl
         mn = m * n
         array = stack.slice!(- mn, mn)
 
+        stack.concat((0...n).map{[array.slice!(0, m), *op]}.flatten)
+
+        Result.new(*stack)
+      end
+
+      def each_stripe(*stack)
+        n = [@max_n, stack.pop].min
+        m = [@max_n, stack.pop].min
+        macro = stack.pop
+
+        op = macro.dispatch
+
+        mn = m * n
+        array = stack.slice!(- mn, mn)
+        array = (0...m).map{array.slice!(0, n)}.transpose.flatten
         stack.concat((0...n).map{[array.slice!(0, m), *op]}.flatten)
 
         Result.new(*stack)
