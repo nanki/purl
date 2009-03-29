@@ -9,10 +9,16 @@ module Purl
           Op.new(:xtc, 1),
           Op.new(:rgb, 4),
           Op.new(:rgba, 5),
+          Op.new(:gray, 2),
           Op.new(:pattern, 2),
           Op.new(:linewidth, 2),
+          Op.new(:'linecap.butt', 1, :linecap_butt),
+          Op.new(:'linecap.round', 1, :linecap_round),
+          Op.new(:'linecap.square', 1, :linecap_square),
           Op.new(:stroke, 1),
           Op.new(:fill, 1),
+          Op.new(:gap, 1),
+          Op.new(:close, 1),
           Op.new(:moveto, 3),
           Op.new(:lineto, 3),
           Op.new(:arc, 6, :arc_cw),
@@ -42,6 +48,11 @@ module Purl
         Result.new(ctx)
       end
 
+      def gray(ctx, g)
+        ctx.set_source_rgb g, g, g
+        Result.new(ctx)
+      end
+
       def pattern(ctx, pattern)
         ctx.set_source pattern
         Result.new(ctx)
@@ -49,6 +60,21 @@ module Purl
 
       def linewidth(ctx, w)
         ctx.set_line_width w
+        Result.new(ctx)
+      end
+
+      def linecap_butt(ctx)
+        ctx.set_line_cap Cairo::LineJoin::BUTT
+        Result.new(ctx)
+      end
+
+      def linecap_round(ctx)
+        ctx.set_line_cap Cairo::LineJoin::ROUND
+        Result.new(ctx)
+      end
+
+      def linecap_square(ctx)
+        ctx.set_line_cap Cairo::LineJoin::SQUARE
         Result.new(ctx)
       end
 
@@ -68,6 +94,16 @@ module Purl
       end
 
       # path
+      def gap(ctx)
+        ctx.new_sub_path
+        Result.new(ctx)
+      end
+
+      def close(ctx)
+        ctx.close_path
+        Result.new(ctx)
+      end
+
       def moveto(ctx, x, y)
         ctx.move_to x, y
         Result.new(ctx)
