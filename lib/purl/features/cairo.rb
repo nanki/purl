@@ -64,17 +64,17 @@ module Purl
       end
 
       def linecap_butt(ctx)
-        ctx.set_line_cap Cairo::LineJoin::BUTT
+        ctx.set_line_cap Cairo::LineCap::BUTT
         Result.new(ctx)
       end
 
       def linecap_round(ctx)
-        ctx.set_line_cap Cairo::LineJoin::ROUND
+        ctx.set_line_cap Cairo::LineCap::ROUND
         Result.new(ctx)
       end
 
       def linecap_square(ctx)
-        ctx.set_line_cap Cairo::LineJoin::SQUARE
+        ctx.set_line_cap Cairo::LineCap::SQUARE
         Result.new(ctx)
       end
 
