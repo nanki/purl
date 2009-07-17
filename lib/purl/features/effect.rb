@@ -12,11 +12,12 @@ module Purl
       end
 
       def blur(image, r)
+        return Result.new(image) if r.zero?
+
         r = [r, 10].min
         d = r.quo(2.75)
         process(image, :as => :magick) do |img|
-          img = img.blur_image(0, d) unless r.zero?
-          Result.new(img)
+          Result.new(img.blur_channel(0, d, Magick::AllChannels))
         end
       end
 
