@@ -49,7 +49,7 @@ module Purl
     attr_reader :stack
 
     def parse(sequence_string)
-      sequence_string.split(":").reject(&:blank?).map{|v| Float(v) rescue (/^\((.*)\)$/ === v ? $1 : v.intern)}
+      sequence_string.scan(/(?:[^:]*:{2,})*[^:]+/).map{|v| Float(v) rescue (/^\((.*)\)$/ === v ? $1.gsub(/::/, ':') : v.intern)}
     end
 
     def initialize(sequence_string, environment)
