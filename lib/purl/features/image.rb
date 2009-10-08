@@ -16,18 +16,8 @@ module Purl
       end
 
       def geom(target)
-        case
-        when target.respond_to?(:columns) && target.respond_to?(:rows)
-          # Magick::Image
-          Result.new(target, target.columns, target.rows)
-        when target.respond_to?(:target)
-          # Cairo::Context
-          Result.new(target, target.target.width, target.target.height)
-        when target.respond_to?(:width) && target.respond_to?(:height)
-          # Cairo::Surface
-          Result.new(target, target.width, target.height)
-        else
-          raise UnexpectedArgument
+        process(target, :as => :magick) do |img|
+          return Result.new(img, img.columns, img.rows)
         end
       end
 
@@ -35,49 +25,67 @@ module Purl
         process(image, :as => :magick) do |img|
           img.background_color = 'transparent'
           img.rotate!(angle)
-          Result.new(img)
         end
       end
 
       def _extend(image, x1, y1, x2, y2)
         process(image, :as => :magick) do |img|
           img.background_color = 'transparent'
-          img = img.extent(img.columns + x1 + x2, img.rows + y1 + y2, -x1, -y1)
-          Result.new(img)
+          img.extent(img.columns + x1 + x2, img.rows + y1 + y2, -x1, -y1)
         end
       end
 
       def flip_x(image)
         process(image, :as => :magick) do |img|
-          Result.new(img.flop!)
+          img.flop!
         end
       end
 
       def flip_y(image)
         process(image, :as => :magick) do |img|
-          Result.new(img.flip!)
+          img.flip!
         end
       end
 
       def crop(image, x, y, w, h)
         process(image, :as => :magick) do |img|
           img.crop!(x, y, w, h, true)
-          Result.new(img)
         end
       end
 
+      require 'rational'
       def composite(image1, image2)
-        process(image1, :as => :magick) do |img1|
-          process(image2, :as => :magick) do |img2|
-            h = [img1.rows, img2.rows].max
-            w = [img1.columns, img2.columns].max
-            w = [w, @max_width].min
-            h = [h, @max_height].min
-            
-            img1.background_color = 'transparent'
-            Result.new(img1.extent(w, h).composite(img2, 0, 0, Magick::OverCompositeOp))
-          end
+        images1 = process(image1, :as => :magick)
+        images2 = process(image2, :as => :magick)
+
+        c1, c2 = 0, 0
+        gcd, lcm = images1.size.gcdlcm(images2.size)
+
+        result = Magick::ImageList.new
+        while lcm > 0
+          img1 = images1[c1]
+          img2 = images2[c2]
+          h = [img1.rows, img2.rows].max
+          w = [img1.columns, img2.columns].max
+          w = [w, @max_width].min
+          h = [h, @max_height].min
+
+
+          img2.background_color = 'transparent'
+
+          img = img1.extent(w, h).composite(img2.extent(w, h), 0, 0, Magick::OverCompositeOp)
+
+          # TODO: hmm...
+          delay = (images1.size > images2.size) ? img1.delay : img2.delay
+          img.delay = delay if delay
+          result << img
+
+          lcm -= 1
+          c1 += 1;c1 %= images1.size
+          c2 += 1;c2 %= images2.size
         end
+
+        Result.new(result)
       end
     end
   end

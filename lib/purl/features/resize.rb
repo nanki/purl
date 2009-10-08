@@ -18,7 +18,6 @@ module Purl
         h = [h, @max_height].min
         process(image, :as => :magick) do |img|
           img.crop_resized!(w, h, Magick::CenterGravity)
-          Result.new(img)
         end
       end
 
@@ -30,7 +29,7 @@ module Purl
             img.resize!(cols, rows)
           end
 
-          Result.new(img)
+          img
         end
       end
 
@@ -44,7 +43,7 @@ module Purl
             end
           end
 
-          Result.new(img)
+          img
         end
       end
     end

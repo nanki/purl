@@ -24,38 +24,64 @@ module Purl
   include ::CairoUtil
 
   private
-  # process with block must return Result.new(ImageList or Image)
-  def process(image, options = {:as => :cairo})
-    if block_given?
-      case image
-      when Cairo::ImageSurface
-        if options[:as] == :cairo
-          yield image
-        elsif options[:as] == :magick
-          yield cairo2magick(image)
+  # process with block must return Result.new(ImageList)
+  def process(image, options = {:as => :cairo}, &block)
+    as = options[:as]
+    case image
+    when Cairo::ImageSurface
+      case as
+      when :cairo
+        process(CairoImageList.new << image, options, &block)
+      when :magick
+        process(cairo2magick(image), options, &block)
+      end
+    when Magick::Image
+      case as
+      when :cairo
+        process(magick2cairo(image), options, &block)
+      when :magick
+        process(Magick::ImageList.new << image, options, &block)
+      end
+    when Magick::ImageList
+      case as
+      when :cairo
+        if block_given?
+          process(process(image, options), options, &block)
+        else
+          result = CairoImageList.new
+          image.each{|img| result << magick2cairo(img)}
+          result
         end
-      when Magick::Image
-        if options[:as] == :magick
-          yield image
-        elsif options[:as] == :cairo
-          yield magick2cairo(image)
+      when :magick
+        if block_given?
+          result = []
+          image.each{|img| result << yield(img)}
+          Result.new(array2imagelist(result.flatten))
+        else
+          image
         end
-      when Magick::ImageList
-        if options[:as] == :magick
+      end
+    when CairoImageList
+      case as
+      when :cairo
+        if block_given?
+          result = []
+          image.each{|img| result << yield(img)}
+          Result.new(array2imagelist(result.flatten))
+        else
+          image
+        end
+      when :magick
+        if block_given?
+          process(process(image, options), options, &block)
+        else
           result = Magick::ImageList.new
-          image.each do |img|
-            result.concat(yield(img))
-          end
-          Result.new(result)
-        elsif options[:as] == :cairo
-          raise "not implemented."
-          #yield magick2cairo(image)
+          image.each{|img| result << cairo2magick(img)}
+          result
         end
-      else
-        Result.new(image)
       end
     else
-      image
+      raise 'never give up.'
     end
   end
 end

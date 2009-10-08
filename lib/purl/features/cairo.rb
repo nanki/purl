@@ -35,7 +35,7 @@ module Purl
       end
 
       def xtc(ctx)
-        Result.new(ctx.target)
+        Result.new(CairoImageList.new << ctx.target)
       end
 
       def rgb(ctx, r, g, b)

@@ -30,7 +30,7 @@ module Purl
           data = open(path).read
         end
 
-        Result.new(Magick::Image.from_blob(data).shift.strip!)
+        Result.new(Magick::ImageList.new.from_blob(data))
       end
     end
   end

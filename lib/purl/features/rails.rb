@@ -14,8 +14,7 @@ module Purl
 
       def load(image_id)
         image = @image_class.find(image_id)
-        image = Magick::Image.from_blob(image.send(@data_column)).shift.strip!
-        Result.new(image)
+        Result.new(Magick::ImageList.new.from_blob(image.send(@data_column)))
       end
     end
   end
