@@ -24,22 +24,38 @@ module Purl
   include ::CairoUtil
 
   private
+  # process with block must return Result.new(ImageList or Image)
   def process(image, options = {:as => :cairo})
-    case image
-    when Cairo::ImageSurface
-      if options[:as] == :cairo
-        yield image
-      elsif options[:as] == :magick
-        yield cairo2magick(image)
-      end
-    when Magick::Image
-      if options[:as] == :magick
-        yield image
-      elsif options[:as] == :cairo
-        yield magick2cairo(image)
+    if block_given?
+      case image
+      when Cairo::ImageSurface
+        if options[:as] == :cairo
+          yield image
+        elsif options[:as] == :magick
+          yield cairo2magick(image)
+        end
+      when Magick::Image
+        if options[:as] == :magick
+          yield image
+        elsif options[:as] == :cairo
+          yield magick2cairo(image)
+        end
+      when Magick::ImageList
+        if options[:as] == :magick
+          result = Magick::ImageList.new
+          image.each do |img|
+            result.concat(yield(img))
+          end
+          Result.new(result)
+        elsif options[:as] == :cairo
+          raise "not implemented."
+          #yield magick2cairo(image)
+        end
+      else
+        Result.new(image)
       end
     else
-      Result.new(image)
+      image
     end
   end
 end

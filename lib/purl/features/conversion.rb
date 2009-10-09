@@ -12,24 +12,22 @@ module Purl
       end
 
       def to_png(image)
-        process(image, :as => :magick) do |img|
-          img.format = 'png'
-          Result.new(img.to_blob, 'image/png')
-        end
+        img = process(image, :as => :magick)
+        Result.new(img.to_blob{|i| i.format = 'png'}, 'image/png')
       end
 
       def to_jpeg(image)
-        process(image, :as => :magick) do |img|
-          img.format = 'jpeg'
-          Result.new(img.to_blob{self.quality = 80}, 'image/jpeg')
-        end
+        img = process(image, :as => :magick)
+        Result.new(img.to_blob{|i| i.format = 'jpeg';i.quality = 80}, 'image/jpeg')
       end
 
       def to_gif(image)
-        process(image, :as => :magick) do |img|
-          img.format = 'gif'
-          Result.new(img.to_blob, 'image/gif')
+        img = process(image, :as => :magick)
+        if img.respond_to? :optimize_layers
+          img = img.optimize_layers(Magick::OptimizeLayer)
         end
+
+        Result.new(img.to_blob{|i| i.format = 'gif'}, 'image/gif')
       end
 
       def to_json(*stack)
