@@ -24,6 +24,7 @@ module Purl
           Op.new(:arc, 6, :arc_cw),
           Op.new(:'arc.cw', 6, :arc_cw),
           Op.new(:'arc.ccw', 6, :arc_ccw),
+          Op.new(:dash, -1),
           Macro.new(:circle, [0, 360, :arc])
         ]
       end
@@ -127,6 +128,14 @@ module Purl
         angle2 *= RAD2DEG
         ctx.arc_negative x, y, radius, angle1, angle2
         Result.new(ctx)
+      end
+
+      def dash(*stack)
+        n = stack.pop
+        dash = stack.slice!(-n, n)
+        ctx = stack.last
+        ctx.set_dash dash
+        Result.new(*stack)
       end
     end
   end
