@@ -24,10 +24,10 @@ module Purl
 
         unless File.exist?(path)
           FileUtils.makedirs(@cache_path)
-          data = open("http://gyazo.com/#{id}.png").read
+          data = open("http://gyazo.com/#{id}.png"){|f|f.read}
           open(path, "wb+"){|file| file.write(data)}
         else
-          data = open(path).read
+          data = open(path){|f|f.read}
         end
 
         Result.new(Magick::ImageList.new.from_blob(data))
